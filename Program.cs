@@ -17,10 +17,21 @@ namespace Пересдача_задание_1
         static void Main()
         {
             Dictionary<string, string> mainqueue = new Dictionary<string, string>();
+         
             Thread FindFilesThread = new Thread(() => FindFiles(mainqueue));
-            FindFilesThread.Start();
-
+            Thread FileInfoThread = new Thread(() => CountFileInfo(mainqueue));
             
+
+            FindFilesThread.Start();
+            try
+            {
+                FindFilesThread.Join();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            FileInfoThread.Start();
         }
         static void FindFiles(Dictionary<string, string> _mainqueue)
         {
@@ -42,8 +53,7 @@ namespace Пересдача_задание_1
                 Console.WriteLine("Найден файл: {0}",file);
             }
 
-            Thread FileInfoThread = new Thread(() => CountFileInfo(_mainqueue));
-            FileInfoThread.Start();
+            
         }
         static void CountFileInfo(Dictionary<string,string> files)
         {
